@@ -9,10 +9,30 @@
             <div ref="videoControl" class="video-controls video-controls-normal-screen ">
                 <Progress @jump-to="jumpTo" :total="total" :current="current"></Progress>
                 <div class="videoControlComponentArea">
-                    <div> <button id="btn">开始</button></div>
-                    <div> 
-                        <button id="btn">全片</button>
-                        <button id="btn">全屏</button>
+                    <div class="control-side">
+                        <div @click="startOrPasue" class="control-btn">
+                            <svg v-if="isPause" t="1715781479214" class="video-control-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4459" width="200" height="200"><path d="M161.2 839.9v-654c0-56.1 60.7-91.1 109.3-63.1l566.3 327c48.6 28 48.6 98.1 0 126.2L270.4 903c-48.5 28-109.2-7.1-109.2-63.1z" fill="#cdcdcd" p-id="4460"></path></svg>
+                            <svg v-else t="1715781525064" class="video-control-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5548" width="200" height="200"><path d="M128 106.858667C128 94.976 137.621333 85.333333 149.12 85.333333h85.76c11.648 0 21.12 9.6 21.12 21.525334V917.12c0 11.882667-9.621333 21.525333-21.12 21.525333H149.12A21.290667 21.290667 0 0 1 128 917.141333V106.88z m640 0c0-11.882667 9.621333-21.525333 21.12-21.525334h85.76c11.648 0 21.12 9.6 21.12 21.525334V917.12c0 11.882667-9.621333 21.525333-21.12 21.525333h-85.76a21.290667 21.290667 0 0 1-21.12-21.525333V106.88z" fill="#bfbfbf" p-id="5549"></path></svg>
+                        </div>
+                        <div >
+                            <span>{{ Math.floor(current) }} / {{ Math.floor(total) }}</span>
+                        </div>
+                    </div>
+                    <div class="control-side">
+                        <div class="control-btn"> <svg t="1715780085335" class="video-control-icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="3087" width="200" height="200">
+                                <path
+                                    d="M460.8 940.8h-320l262.4-262.4c12.8-12.8 12.8-38.4 0-51.2-12.8-19.2-38.4-19.2-57.6 0l-262.4 262.4v-345.6c0-19.2-19.2-38.4-38.4-38.4s-38.4 19.2-38.4 38.4v364.8c0 51.2 38.4 115.2 96 115.2h358.4c19.2 0 38.4-19.2 38.4-38.4 0-25.6-19.2-44.8-38.4-44.8zM940.8 6.4h-377.6c-19.2 0-38.4 19.2-38.4 38.4s19.2 38.4 38.4 38.4h320l-268.8 262.4c-12.8 12.8-12.8 38.4 0 57.6 19.2 12.8 44.8 12.8 57.6 0l262.4-262.4v320c0 19.2 19.2 38.4 38.4 38.4s38.4-19.2 38.4-38.4v-352c6.4-64-25.6-102.4-70.4-102.4z"
+                                    fill="#cdcdcd" p-id="3088"></path>
+                            </svg>
+                        </div>
+                        <div @click="enterOrExitFullScreen" class="control-btn"> <svg t="1715780085335" class="video-control-icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="3087" width="200" height="200">
+                                <path
+                                    d="M460.8 940.8h-320l262.4-262.4c12.8-12.8 12.8-38.4 0-51.2-12.8-19.2-38.4-19.2-57.6 0l-262.4 262.4v-345.6c0-19.2-19.2-38.4-38.4-38.4s-38.4 19.2-38.4 38.4v364.8c0 51.2 38.4 115.2 96 115.2h358.4c19.2 0 38.4-19.2 38.4-38.4 0-25.6-19.2-44.8-38.4-44.8zM940.8 6.4h-377.6c-19.2 0-38.4 19.2-38.4 38.4s19.2 38.4 38.4 38.4h320l-268.8 262.4c-12.8 12.8-12.8 38.4 0 57.6 19.2 12.8 44.8 12.8 57.6 0l262.4-262.4v320c0 19.2 19.2 38.4 38.4 38.4s38.4-19.2 38.4-38.4v-352c6.4-64-25.6-102.4-70.4-102.4z"
+                                    fill="#cdcdcd" p-id="3088"></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
                 <slot name="control"></slot>
@@ -75,6 +95,7 @@ const testc = () => {
     console.log(vdo.value!.currentTime = value.value);
 }
 function jumpTo(time: number) {
+
     current.value = time
     vdo.value!.currentTime = time
 
@@ -103,6 +124,9 @@ function startVideoTimer() {
             }
         }, 1000);
     }
+}
+function gotoFullScreenOrExit () {
+
 }
 function startOrPasue() {
 
@@ -166,9 +190,6 @@ onMounted(() => {
     console.log(vdo.value?.duration);
 
     isPause.value = vdo.value!.paused
-    const btn = document.querySelector('#btn')
-
-    btn!.addEventListener('click', enterOrExitFullScreen)
     videoContainer.value.addEventListener('fullscreenchange', () => {
         if (isFullScreen()) {
             videoContainer.value.classList.remove('video-container-normal-screen')
@@ -297,6 +318,7 @@ video {
         transform: rotate(360deg);
     }
 }
+
 .videoControlComponentArea {
     height: 100%;
     display: flex;
@@ -304,5 +326,23 @@ video {
     /* justify-content: center; */
     align-items: center;
     justify-content: space-between;
+}
+
+.video-control-icon {
+    height: 100%;
+    width: 100%;
+}
+.control-btn {
+    height: 80%;
+    width: 24px;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.control-side {
+    height: 70%;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
 }
 </style>
