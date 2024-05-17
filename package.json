@@ -1,18 +1,25 @@
 {
-  "name": "my-vue-components",
-  "version": "0.0.0",
-  "private": true,
+  "name": "my-vue-components-czh",
+  "version": "0.0.1",
+  "files": [
+    "dist"
+  ],
+  "module": "./dist/my-component-library.es.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/my-component-library.umd.js",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
+    "type-check": "vue-tsc --declaration --emitDeclarationOnly --outDir './dist' ./src/components/index.ts"
   },
   "dependencies": {
+    "my-vue-components-czh": "^0.0.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {
+    "@babel/types": "^7.24.5",
     "@tsconfig/node18": "^2.0.1",
     "@types/node": "^18.16.17",
     "@vitejs/plugin-vue": "^4.2.3",

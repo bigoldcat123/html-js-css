@@ -1,12 +1,12 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import path from 'node:path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue()
   ],
   resolve: {
     alias: {
@@ -14,7 +14,7 @@ export default defineConfig({
     }
   },
   server: {
-    host:'0.0.0.0',
+    host: '0.0.0.0',
     proxy: {
       '/api': {
         target: 'http://localhost:8888',
@@ -24,13 +24,17 @@ export default defineConfig({
     }
   },
   build: {
+    lib: {
+      entry: path.resolve(__dirname, 'src/components/index.ts'),
+      name: 'myComponentLib',
+      fileName: (format) => `my-component-library.${format}.js`,
+    },
     rollupOptions: {
+      external: ['vue'],
       output: {
-        manualChunks(id) {
-          if(id.includes('node_modules')) {
-            return 'vemder'
+        globals: {
+          vue:'vue'
         }
-      }
       }
     }
   }

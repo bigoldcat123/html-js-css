@@ -158,7 +158,7 @@ const testc = () => {
 }
 
 
-let closeQualityContorlTimer = -1
+let closeQualityContorlTimer:any = -1
 function tryToCloseQualityContolTimer() {
     if (closeQualityContorlTimer != -1) {
         clearTimeout(closeQualityContorlTimer)
@@ -188,7 +188,7 @@ function changeVideoRate (index:number) {
     currentRateIndex = index
     vdo.value!.playbackRate = rates.value[index].rate
 }
-let closeRateContorlTimer = -1
+let closeRateContorlTimer:any = -1
 function tryToCloseRateContolTimer() {
     if (closeRateContorlTimer != -1) {
         clearTimeout(closeRateContorlTimer)
@@ -212,8 +212,8 @@ function jumpTo(time: number) {
         startVideoTimer()
     }
 }
-let startOrPasueTimer: number[] = []
-let videoTImer = -1
+let startOrPasueTimer:any[] = []
+let videoTImer:any = -1
 function videoFinished() {
     console.log('finished');
     isPause.value = true
@@ -250,7 +250,7 @@ function startOrPasue() {
         }
     }, 340))
 }
-let timer: number = -1
+let timer:any = -1
 let lastNode: any
 function showControls(e: MouseEvent) {
     if (e.target != lastNode) {
