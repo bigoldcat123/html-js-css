@@ -1,7 +1,7 @@
 <template>
     <div class="container_imagepicker">
         <div ref="imgfather" class="imagecontent_imagepicker">
-            <img draggable="false" ref="img" class="img_imagepicker" src="a.png" />
+            <img draggable="false" ref="img" class="img_imagepicker" :src="imageSrc" />
         </div>
         <div class="btns_imagepicker">
             <div><input ref="ipt" v-model="imagerate" type="range"></div>
@@ -10,6 +10,9 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
+defineProps<{
+    imageSrc:string
+}>()
 const img = ref<HTMLImageElement>()
 const imgfather = ref<HTMLDivElement>()
 const ipt = ref<HTMLInputElement>()

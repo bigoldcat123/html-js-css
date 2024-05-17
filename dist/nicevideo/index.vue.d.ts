@@ -1,3 +1,8 @@
+type QualitySource = {
+    src: string;
+    title: string;
+    using: boolean;
+};
 declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     height: {
         type: NumberConstructor;
@@ -13,10 +18,10 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     };
     source: {
         type: {
-            (arrayLength: number): string[];
-            (...items: string[]): string[];
-            new (arrayLength: number): string[];
-            new (...items: string[]): string[];
+            (arrayLength: number): QualitySource[];
+            (...items: QualitySource[]): QualitySource[];
+            new (arrayLength: number): QualitySource[];
+            new (...items: QualitySource[]): QualitySource[];
             isArray(arg: any): arg is any[];
             readonly prototype: any[];
             from<T>(arrayLike: ArrayLike<T>): T[];
@@ -60,10 +65,10 @@ declare const _default: __VLS_WithTemplateSlots<import("vue").DefineComponent<{
     };
     source: {
         type: {
-            (arrayLength: number): string[];
-            (...items: string[]): string[];
-            new (arrayLength: number): string[];
-            new (...items: string[]): string[];
+            (arrayLength: number): QualitySource[];
+            (...items: QualitySource[]): QualitySource[];
+            new (arrayLength: number): QualitySource[];
+            new (...items: QualitySource[]): QualitySource[];
             isArray(arg: any): arg is any[];
             readonly prototype: any[];
             from<T>(arrayLike: ArrayLike<T>): T[];

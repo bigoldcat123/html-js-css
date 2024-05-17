@@ -1,3 +1,3 @@
 import NiceVideo from './NiceVideo/index.vue'
-
-export {NiceVideo}
+import ImagePicker from './ImagePicker/index.vue'
+export {NiceVideo, ImagePicker}
