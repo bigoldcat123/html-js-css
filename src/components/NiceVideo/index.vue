@@ -28,8 +28,6 @@
                     </div>
                 </div>
                 <div class="control-side">
-
-
                     <div style="margin-right: 20px;position: relative;">
                         <div @mouseenter="tryToCloseQualityContolTimer" @mouseleave="tryToCloseQualityControl"
                             v-show="showQualityControl" class="rate-control" :style="{top:-qualities.length * 33 - 20 + 'px'}">
@@ -81,6 +79,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Progress from './Progress.vue'
+type QualitySource = {
+    src:string,
+    title:string,
+    using:boolean
+}
 const props = defineProps({
     height: {
         type: Number,
@@ -95,7 +98,7 @@ const props = defineProps({
         required: true
     },
     source: {
-        type: Array<string>,
+        type: Array<QualitySource>,
         required: true
     },
     traker: {
