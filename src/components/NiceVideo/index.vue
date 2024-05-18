@@ -1,8 +1,7 @@
 <template>
     <div @mousemove="showControls" @dblclick="enterOrExitFullScreen" ref="videoContainer"
         class="video-container video-container-normal-screen ">
-        <video @click="startOrPasue" ref="vdo" :poster="poster" :src="videoSourceSrc">
-            <!-- <source v-for="item in source" :src="videoSourceSrc" type="video/mp4" /> -->
+        <video @click="startOrPasue" ref="vdo" :poster="poster" preload="metadata" :src="videoSourceSrc">
             <track default v-for="item in traker" kind="subtitles" :src="item" srclang="es" label="Spanish" />
         </video>
         <div ref="videoControl" class="video-controls video-controls-normal-screen ">
@@ -24,25 +23,30 @@
                         </svg>
                     </div>
                     <div>
-                        <span>{{ Math.floor(current) }} / {{ Math.floor(total) }}</span>
+                        <span>{{ Math.floor(current) }} / {{ Math.floor(total) ? Math.floor(total) : 0 }}</span>
                     </div>
                 </div>
                 <div class="control-side">
                     <div style="margin-right: 20px;position: relative;">
                         <div @mouseenter="tryToCloseQualityContolTimer" @mouseleave="tryToCloseQualityControl"
-                            v-show="showQualityControl" class="rate-control" :style="{top:-qualities.length * 33 - 20 + 'px'}">
-                            <div @click="changeVideoQuality(index)" class="rate-control-option" :style="item.using? {backgroundColor:'rgb(43, 43, 43)'}:{}" v-for="item,index in qualities">{{ item.title }}</div>
+                            v-show="showQualityControl" class="rate-control"
+                            :style="{ top: -props.source.length * 33 - 20 + 'px' }">
+                            <div @click="changeVideoQuality(index)" class="rate-control-option"
+                                :style="index == currentQualityIndex ? { backgroundColor: 'rgb(43, 43, 43)' } : {}"
+                                v-for="item, index in props.source">{{ item.title }}</div>
                         </div>
-                        <div @mouseenter="showQualityControl = true" @mouseleave="tryToCloseQualityControl"
+                        <div @mouseenter="toShowQualityControl" @mouseleave="tryToCloseQualityControl"
                             style="cursor: pointer;">清晰度</div>
                     </div>
 
                     <div style="margin-right: 20px;position: relative;">
                         <div @mouseenter="tryToCloseRateContolTimer" @mouseleave="tryToCloseRateControl"
-                            v-show="showRateControl" class="rate-control" :style="{top:-rates.length * 33 - 20 + 'px'}">
-                            <div @click="changeVideoRate(index)" class="rate-control-option" :style="item.using? {backgroundColor:'rgb(43, 43, 43)'}:{}" v-for="item,index in rates">{{ item.rate + ' X' }}</div>
+                            v-show="showRateControl" class="rate-control" :style="{ top: -rates.length * 33 - 20 + 'px' }">
+                            <div @click="changeVideoRate(index)" class="rate-control-option"
+                                :style="item.using ? { backgroundColor: 'rgb(43, 43, 43)' } : {}" v-for="item, index in rates">
+                                {{ item.rate + ' X' }}</div>
                         </div>
-                        <div @mouseenter="showRateControl = true" @mouseleave="tryToCloseRateControl"
+                        <div @mouseenter="toShowRateControl" @mouseleave="tryToCloseRateControl"
                             style="cursor: pointer;">倍速</div>
                     </div>
 
@@ -77,12 +81,11 @@
 
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import Progress from './Progress.vue'
 type QualitySource = {
-    src:string,
-    title:string,
-    using:boolean
+    src: string,
+    title: string,
 }
 const props = defineProps({
     height: {
@@ -108,43 +111,36 @@ const props = defineProps({
 })
 const rates = ref([
     {
-        rate:2,
-        using:false
-    },{
-        rate:1.75,
-        using:false
-    },{
-        rate:1.5,
-        using:false
-    },{
-        rate:1,
-        using:true
-    },{
-        rate:0.75,
-        using:false
-    },{
-        rate:0.5,
-        using:false
-    }
-])
-let currentRateIndex = 3
-const qualities = ref([
-    {
-        title:'4K',
-        src:'/api/heigh',
-        using:true
-    },
-    {
-        title:'1080',
-        src:'/api/low',
+        rate: 2,
+        using: false
+    }, {
+        rate: 1.75,
+        using: false
+    }, {
+        rate: 1.5,
+        using: false
+    }, {
+        rate: 1,
+        using: true
+    }, {
+        rate: 0.75,
+        using: false
+    }, {
+        rate: 0.5,
         using: false
     }
 ])
-let currentQualityIndex = 1
-const HEIGH  = '/api/heigh'
-const LOW = '/api/low'
-const videoSourceSrc = ref(HEIGH)
+let currentRateIndex = 3
 
+let currentQualityIndex = ref(0)
+
+const videoSourceSrc = ref(props.source[currentQualityIndex.value].src)
+
+watch(currentQualityIndex,() => {
+    vdo.value!.src = props.source[currentQualityIndex.value].src
+    vdo.value!.currentTime = current.value
+    vdo.value?.play()
+})
 const vdo = ref<HTMLVideoElement>()
 const videoContainer = ref()
 const videoControl = ref()
@@ -156,12 +152,9 @@ const isPause = ref(true)
 const value = ref(0)
 const showRateControl = ref(false)
 const showQualityControl = ref(false)
-const testc = () => {
-    console.log(vdo.value!.currentTime = value.value);
-}
 
 
-let closeQualityContorlTimer:any = -1
+let closeQualityContorlTimer: any = -1
 function tryToCloseQualityContolTimer() {
     if (closeQualityContorlTimer != -1) {
         clearTimeout(closeQualityContorlTimer)
@@ -170,39 +163,59 @@ function tryToCloseQualityContolTimer() {
 }
 function tryToCloseQualityControl() {
     closeQualityContorlTimer = setTimeout(() => {
+        console.log(
+            'close'
+        );
+
         showQualityControl.value = false
         closeQualityContorlTimer = -1
     }, 1000);
 }
-function changeVideoQuality (index:number) {
-    qualities.value[index].using = true
-    qualities.value[currentQualityIndex].using = false
-    currentQualityIndex = index
-    vdo.value!.src =  qualities.value[index].src
-    console.log(vdo.value?.src);
-    vdo.value!.currentTime = current.value 
-    vdo.value?.play()
-    
+function changeVideoQuality(index: number) {
+    showQualityControl.value = false
+    currentQualityIndex.value = index
+
+    setTimeout(() => {
+        tryToCloseQualityContolTimer()
+    }, 200);
 }
-function changeVideoRate (index:number) {
+function toShowQualityControl () {
+    tryToCloseQualityContolTimer()
+    showQualityControl.value = true
+}
+function changeVideoRate(index: number) {
+    console.log('changeVideoRate', index);
+
     showRateControl.value = false
     rates.value[index].using = true
     rates.value[currentRateIndex].using = false
     currentRateIndex = index
     vdo.value!.playbackRate = rates.value[index].rate
+    setTimeout(() => {
+        tryToCloseRateContolTimer()
+    }, 200);
 }
-let closeRateContorlTimer:any = -1
+let closeRateContorlTimer: any = -1
 function tryToCloseRateContolTimer() {
+
     if (closeRateContorlTimer != -1) {
+        console.log('clear timer ');
         clearTimeout(closeRateContorlTimer)
         closeRateContorlTimer = -1
     }
 }
 function tryToCloseRateControl() {
+    console.log('tryToCloseRateControl');
+
     closeRateContorlTimer = setTimeout(() => {
+        console.log('really closeed ');
         showRateControl.value = false
         closeRateContorlTimer = -1
     }, 1000);
+}
+function toShowRateControl () {
+    tryToCloseRateContolTimer()
+    showRateControl.value = true
 }
 function jumpTo(time: number) {
 
@@ -215,8 +228,8 @@ function jumpTo(time: number) {
         startVideoTimer()
     }
 }
-let startOrPasueTimer:any[] = []
-let videoTImer:any = -1
+let startOrPasueTimer: any[] = []
+let videoTImer: any = -1
 function videoFinished() {
     console.log('finished');
     isPause.value = true
@@ -253,7 +266,7 @@ function startOrPasue() {
         }
     }, 340))
 }
-let timer:any = -1
+let timer: any = -1
 let lastNode: any
 function showControls(e: MouseEvent) {
     if (e.target != lastNode) {
@@ -293,10 +306,7 @@ function enterOrExitFullScreen() {
     }
 }
 onMounted(() => {
-    vdo.value!.playbackRate = 2
-
-    total.value = vdo.value?.duration as number
-    console.log(vdo.value?.duration);
+    // vdo.value!.playbackRate = 2
 
     isPause.value = vdo.value!.paused
     videoContainer.value.addEventListener('fullscreenchange', () => {
@@ -314,27 +324,28 @@ onMounted(() => {
         }
     })
     vdo.value!.addEventListener("playing", () => {
-        console.log("Video is no longer paused");
         isWaitting.value = false
+        if(isPause.value) {
+            startOrPasue()
+        }
     });
-
-    // vdo.value!.addEventListener("seeking", () => {
-    //     console.log("Video is seeking");
-    // });
 
     vdo.value!.addEventListener("seeked", () => {
-        console.log("Video is seeked");
         isWaitting.value = false
     });
+
     vdo.value?.addEventListener('waiting', () => {
-        console.log('waitting');
         isWaitting.value = true
+    })
+    vdo.value?.addEventListener('loadedmetadata', () => {
+        total.value = Math.floor(vdo.value?.duration as number)
     })
     videoContainer.value.addEventListener('mouseenter', () => {
         videoControl.value.style.opacity = '0.7'
         videoHead.value!.style.opacity = '0.7'
     })
     videoContainer.value.addEventListener('mouseleave', () => {
+        // TODO remove this when completed the full screen
         // videoControl.value.style.opacity = '0'
         // videoHead.value!.style.opacity = '0'
     })

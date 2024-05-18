@@ -11,12 +11,10 @@ import NiceVideo from '@/components/NiceVideo/index.vue'
       {
          title: '4K',
          src: '/api/heigh',
-         using: true
       },
       {
          title: '1080',
          src: '/api/low',
-         using: false
       }
    ]" :traker="['/nicevideo/test.vtt']" style="margin: 0 auto;">
       <template #head="scopp">

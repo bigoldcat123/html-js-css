@@ -58,7 +58,7 @@ function jumpTO(e: MouseEvent) {
     width: 0%;
     height: 100%;
     background-color: rgb(255, 0, 0);
-    transition: all 1s linear;
+    transition: all 0.5s linear;
 }
 .progressHead {
     height: 200%;
