@@ -319,7 +319,6 @@ onMounted(() => {
             videoContainer.value.classList.add('video-container-full-screen')
             videoControl.value.classList.remove('video-controls-normal-screen')
             videoControl.value.classList.add('video-controls-full-screen')
-            // TODO 控制按钮自动隐藏
         } else {
             videoContainer.value.classList.remove('video-container-full-screen')
             videoContainer.value.classList.add('video-container-normal-screen')
@@ -350,8 +349,8 @@ onMounted(() => {
     })
     videoContainer.value.addEventListener('mouseleave', () => {
         // TODO remove this when completed the full screen
-        // videoControl.value.style.opacity = '0'
-        // videoHead.value!.style.opacity = '0'
+        videoControl.value.style.opacity = '0'
+        videoHead.value!.style.opacity = '0'
     })
 })
 

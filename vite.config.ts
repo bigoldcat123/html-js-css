@@ -6,7 +6,7 @@ import path from 'node:path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue()
+    vue(), 
   ],
   resolve: {
     alias: {
@@ -33,7 +33,7 @@ export default defineConfig({
       external: ['vue'],
       output: {
         globals: {
-          vue:'vue'
+          vue: 'vue'
         }
       }
     }

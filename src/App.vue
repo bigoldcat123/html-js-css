@@ -7,14 +7,14 @@ import NiceVideo from '@/components/NiceVideo/index.vue'
 </script>
 
 <template>
-   <NiceVideo :poster="'/nicevideo/poster.jpg'" :source="[
+   <NiceVideo :poster="'/api/niceVideo/poster'" :source="[
       {
          title: '4K',
-         src: '/api/heigh',
+         src: '/api/niceVideo/heigh',
       },
       {
-         title: '1080',
-         src: '/api/low',
+         title: '1080p',
+         src: '/api/niceVideo/low',
       }
    ]" :traker="['/nicevideo/test.vtt']" style="margin: 0 auto;">
       <template #head="scopp">
