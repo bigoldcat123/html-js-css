@@ -22,9 +22,10 @@
                                 fill="#bfbfbf" p-id="5549"></path>
                         </svg>
                     </div>
-                    <div>
+                    <div style="margin-right: 10px;">
                         <span>{{ Math.floor(current) }} / {{ Math.floor(total) ? Math.floor(total) : 0 }}</span>
                     </div>
+                        <VolumButton @change-volum="changeVolum" class="control-btn"></VolumButton>
                 </div>
                 <div class="control-side">
                     <div style="margin-right: 20px;position: relative;">
@@ -83,6 +84,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import Progress from './Progress.vue'
+import VolumButton from './VolumButton.vue'
 type QualitySource = {
     src: string,
     title: string,
@@ -153,7 +155,9 @@ const value = ref(0)
 const showRateControl = ref(false)
 const showQualityControl = ref(false)
 
-
+function changeVolum (volum:number) {
+    vdo.value!.volume = volum / 100
+}
 let closeQualityContorlTimer: any = -1
 function tryToCloseQualityContolTimer() {
     if (closeQualityContorlTimer != -1) {
@@ -238,14 +242,14 @@ function startVideoTimer() {
     if (videoTImer == -1) {
         videoTImer = setInterval(() => {
             // console.log(vdo.value?.currentTime + ' -> ' + vdo.value?.duration);
-            total.value = Math.floor(vdo.value?.duration as number)
-            current.value = Math.floor(vdo.value?.currentTime as number)
+            total.value = vdo.value?.duration as number
+            current.value = vdo.value?.currentTime as number
             if (vdo.value?.currentTime == vdo.value?.duration) {
                 videoFinished()
                 clearInterval(videoTImer)
                 videoTImer = -1
             }
-        }, 1000);
+        }, 300);
     }
 }
 function startOrPasue() {
@@ -307,7 +311,7 @@ function enterOrExitFullScreen() {
 }
 onMounted(() => {
     // vdo.value!.playbackRate = 2
-
+    vdo.value!.volume = 0.5
     isPause.value = vdo.value!.paused
     videoContainer.value.addEventListener('fullscreenchange', () => {
         if (isFullScreen()) {

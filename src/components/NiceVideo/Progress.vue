@@ -2,7 +2,7 @@
     <div ref="progress" @mouseleave="leave" @mouseenter="showProgress" @click="jumpTO" class="progress-container">
         <div class="progress">
             <div ref="progressline" class="progressline" :style="{ width: (current / total) * 100 + '%' }"></div>
-            <div v-show="showHead" class="progressHead"></div>
+            <div  v-show="showHead" class="progressHead"></div>
         </div>
     </div>
 </template>
@@ -18,7 +18,6 @@ const emit = defineEmits<{
 const progressline = ref<HTMLDivElement>()
 const showHead = ref(false)
 const progress = ref<HTMLDivElement>()
-const marginLeft = ref('')
 function showProgress(e: MouseEvent) {
     e.offsetX
     showHead.value = true
@@ -58,7 +57,7 @@ function jumpTO(e: MouseEvent) {
     width: 0%;
     height: 100%;
     background-color: rgb(255, 0, 0);
-    transition: all 0.5s linear;
+    /* transition: all 0.5s linear; */
 }
 .progressHead {
     height: 200%;

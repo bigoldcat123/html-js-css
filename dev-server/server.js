@@ -10,7 +10,7 @@ app.use('/heigh',(req,res) => {
     res.sendFile(PATH + '4k60s.mp4')
 })
 app.use('/low',(req,res) => {
-    res.sendFile(PATH + '4k53.mp4')
+    res.sendFile(PATH + '1080p22s.mp4')
 })
 app.listen(8888, () => {
     console.log('listem at : http://localhost:' + 8888);
