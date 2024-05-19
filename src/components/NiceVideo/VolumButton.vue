@@ -1,7 +1,8 @@
 <template>
     <div style="position: relative;">
-        <div @mouseenter="toShowVolumControl" @mouseleave="tryTocloseVolumControl" v-show="showVolumControl" class="switch-block">
-            <div class="switch-line">
+        <div @mouseenter="toShowVolumControl" @mouseleave="tryTocloseVolumControl" v-show="showVolumControl"
+            class="switch-block">
+            <div @click="changeVolumDir" class="switch-line">
                 <div ref="thumb" @mousedown="changeVolum" class="thumb"></div>
             </div>
         </div>
@@ -22,20 +23,42 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 const emit = defineEmits<{
-    (e:'changeVolum', volum: number): void
+    (e: 'changeVolum', volum: number): void
 }>()
 const volum = ref(0)
 const showVolumControl = ref(false)
 const thumb = ref<HTMLDivElement>()
-let timmer:any = -1
-function toShowVolumControl () {
+let timmer: any = -1
+watch(volum, () => {
+    const v = Math.floor(((82 - volum.value) / 82) * 100)
+    console.log('the volum is ', v);
+
+    emit('changeVolum', v)
+})
+function changeVolumDir(e: MouseEvent) {
+    if (e.target === thumb.value) {
+        return
+    }
+    console.log(e.offsetY);
+    if (e.offsetY - 8 < 0){
+        volum.value = 0
+    }
+    else if (e.offsetY - 8 > 82) {
+        volum.value = 82
+    }
+    else {
+        volum.value = e.offsetY - 8
+    }
+
+}
+function toShowVolumControl() {
     clearTimeout(timmer)
     showVolumControl.value = true
 }
-function tryTocloseVolumControl () {
-    timmer =  setTimeout(() => {
+function tryTocloseVolumControl() {
+    timmer = setTimeout(() => {
         showVolumControl.value = false
     }, 1000);
 }
@@ -46,10 +69,7 @@ function changeVolum(e: MouseEvent) {
         // console.log(e.clientY - start);
         if (currentV + e.clientY - start >= 0 && currentV + e.clientY - start <= 82) {
             volum.value = currentV + e.clientY - start
-            console.log(volum.value);
-            const v = Math.floor(((82 - volum.value) / 82) * 100)
-            console.log(v);
-            emit('changeVolum',v)
+
         }
     }
     document.addEventListener('mousemove', x)
