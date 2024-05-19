@@ -2,12 +2,13 @@
 import TimerView from './view/TimerView.vue';
 import HeighLight from './view/HeighLightView.vue';
 import NiceVideo from '@/components/NiceVideo/index.vue'
+import test from '@/components/test/index.vue'
 // import { NiceVideo } from '../dist/index';
 // import { NiceVideo } from 'my-vue-components-czh';
 </script>
 
 <template>
-   <NiceVideo :poster="'/api/niceVideo/poster'" :source="[
+   <!-- <NiceVideo :poster="'/api/niceVideo/poster'" :source="[
       {
          title: '4K',
          src: '/api/niceVideo/heigh',
@@ -20,7 +21,8 @@ import NiceVideo from '@/components/NiceVideo/index.vue'
       <template #head="scopp">
          <button>呃呃呃{{ scopp.height }}</button>
       </template>
-   </NiceVideo>
+   </NiceVideo> -->
+<test></test>
 </template>
 
 <style scoped></style>
